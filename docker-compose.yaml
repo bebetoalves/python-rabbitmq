@@ -1,0 +1,31 @@
+version: '3'
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - default
+
+  sensor:
+    container_name: sensor
+    restart: on-failure
+    build: ./sensor
+    depends_on:
+      - rabbitmq
+    networks:
+      - default
+
+  server:
+    container_name: server
+    restart: on-failure
+    build: ./server
+    depends_on:
+      - rabbitmq
+    networks:
+      - default
+
+networks:
+  default:
